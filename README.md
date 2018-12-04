@@ -8,7 +8,7 @@
 > Unterlagen zu meinem Vortrag wie sich Softwareentwickler durch Mindset und Technologie sicherer fühlen können. 
 
 ## Examples
-All the examples can be found under `./examples`.
+All the examples can be found under [`./examples`](./examples).
 
 ## Slides
 TODO
