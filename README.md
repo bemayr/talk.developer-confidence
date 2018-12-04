@@ -2,6 +2,7 @@
 <div align="center">
   <span>Wie sich Entwickler <strong>sicher sicher</strong> fühlen.</span>
 </div>
+<br />
 
 ![frontpage](frontpage.png)
 
