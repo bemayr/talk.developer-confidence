@@ -31,36 +31,29 @@
       </tr>
     </table>
     <button v-on:click="refresh()">Calculate Correlation</button>
+    <div class="loading" v-if="isLoading">Loading...</div>
     <h3>
       <span>Correlation:&nbsp;</span>
-      <span>{{ correlation }}</span>
+      <span v-if="correlation.state === 'not-loaded'">...</span>
+      <span v-if="correlation.state === 'loading'" class="loading">loading</span>
+      <span v-if="correlation.state === 'success'">{{ correlation.data }}</span>
+      <span v-if="correlation.state === 'error'" class="error">{{ correlation.message }}</span>
     </h3>
     <div class="error" v-if="hasError">Error: {{ errorMessage }}</div>
-    <div class="loading" v-if="isLoading">Loading...</div>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { calculateCorrelation } from "../api";
+import { calculateCorrelation, RemoteData, withRemoteHandling } from "../api";
 
 @Component
-export default class Correlation extends Vue {
-  correlation: number = 0;
-  isLoading: boolean = false;
-  hasError: boolean = false;
-  errorMessage: string | undefined = undefined;
+export default class SafeCorrelation extends Vue {
+  correlation: RemoteData<number> = { state: "not-loaded" };
 
   async refresh(): Promise<void> {
-    this.isLoading = true;
-    try {
-      this.correlation = await calculateCorrelation();
-    } catch (error) {
-      this.hasError = true;
-      this.errorMessage = error.message;
-    } finally {
-      this.isLoading = false;
-    }
+    this.correlation = { state: "loading" };
+    this.correlation = await withRemoteHandling(() => calculateCorrelation());
   }
 }
 </script>

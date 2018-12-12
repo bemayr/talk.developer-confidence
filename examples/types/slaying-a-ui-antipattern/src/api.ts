@@ -1,6 +1,6 @@
 import { Chance } from "chance";
 
-export async function calculateCorrelation(testdata: any): Promise<number> {
+export async function calculateCorrelation(): Promise<number> {
   const chance: Chance.Chance = new Chance();
 
   // simulate latency
@@ -16,3 +16,19 @@ export async function calculateCorrelation(testdata: any): Promise<number> {
     return chance.floating({ min: 0.1, max: 0.6 });
   }
 }
+
+export async function withRemoteHandling<T>(
+  apiCall: () => Promise<T>
+): Promise<RemoteData<T>> {
+  try {
+    return { state: "success", data: await apiCall() };
+  } catch (error) {
+    return { state: "error", message: error.message };
+  }
+}
+
+export type RemoteData<T> =
+  | { state: "not-loaded" }
+  | { state: "loading" }
+  | { state: "success"; data: T }
+  | { state: "error"; message: string };
