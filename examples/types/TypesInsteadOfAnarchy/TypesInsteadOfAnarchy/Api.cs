@@ -24,9 +24,8 @@ namespace TypesInsteadOfAnarchy
     public interface ILogic
     {
         Training LoadTraining(Guid id);
-        void LogTrainingProgress(Guid id1, Guid id2, string @event);
+        void LogTrainingProgress(Guid trainingId, Guid traineeId, string @event);
     }
-
     public class Logic : ILogic
     {
         public IList<Event> Events { get; } = new List<Event>();
